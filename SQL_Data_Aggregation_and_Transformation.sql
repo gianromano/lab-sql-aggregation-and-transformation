@@ -4,14 +4,14 @@
 SELECT MAX(length) AS max_duration, MIN(length) AS min_duration FROM film;
 
 -- 1.2. Express the average movie duration in hours and minutes. Don't use decimals.
-SELECT FLOOR(AVG(length) / 60) as Average_Hours, ROUND((AVG(length) / 60 - FLOOR(AVG(length) / 60)) * 60) as Average_Minutes FROM film;
+SELECT FLOOR(AVG(rental_duration) / 60) AS Average_Hours, AVG(rental_duration) % 60 AS Average_Minutes FROM film;
 
 -- 2.0 You need to gain insights related to rental dates:
 -- 2.1 Calculate the number of days that the company has been operating.
 SELECT MIN(rental_date) AS start_date, MAX(rental_date) AS end_date, DATEDIFF(MAX(rental_date), MIN(rental_date)) AS date_difference FROM rental;
 
 -- 2.2 Retrieve rental information and add two additional columns to show the month and weekday of the rental. Return 20 rows of results.
-SELECT *, DAY(rental_date) AS Day, MONTH(rental_date) AS Month, YEAR(rental_date) AS Year FROM rental;
+SELECT *, DATE_FORMAT(rental_date, '%M') AS Month, DATE_FORMAT(rental_date, '%W') AS Weekday FROM rental LIMIT 20;
 
 -- Bonus: Retrieve rental information and add an additional column called DAY_TYPE with values 'weekend' or 'workday', depending on the day of the week.
 
@@ -38,7 +38,7 @@ SELECT  rating, COUNT(title) AS total_number_of_films FROM film GROUP BY rating 
 
 -- 2.0 Using the film table, determine:
 -- 2.1 The mean film duration for each rating, and sort the results in descending order of the mean duration. Round off the average lengths to two decimal places. This will help identify popular movie lengths for each category.
-SELECT rating, AVG(length) AS average_length_of_films FROM film GROUP BY rating ORDER BY average_length_of_films DESC;
+SELECT rating, ROUND(AVG(length),2) AS average_length_of_films FROM film GROUP BY rating ORDER BY average_length_of_films DESC;
 
 -- 2.2 Identify which ratings have a mean duration of over two hours in order to help select films for customers who prefer longer movies.
 SELECT  rating, ROUND(AVG(length) / 60) as Average_Hours FROM film GROUP BY rating having Average_Hours >= 2;
